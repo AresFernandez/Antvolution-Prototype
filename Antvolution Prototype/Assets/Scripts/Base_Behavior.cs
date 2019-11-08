@@ -17,7 +17,7 @@ public class Base_Behavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        maxAnts = 1;
+        maxAnts = 0;
         startTime = Time.time;
     }
 

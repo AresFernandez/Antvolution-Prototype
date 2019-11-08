@@ -7,26 +7,31 @@ public class Ant_Behavior : MonoBehaviour
 {
     private GameObject player;
     private GameObject PickUp;
+    private GameObject Puente;
     public bool followPlayer;
     NavMeshAgent agent;
     public Transform PickPosition;
     public float pickingRange = 2.0f;
     public bool objectPicked;
     public bool movingToFood;
+    public bool movingToPoint;
 
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
-        followPlayer = false;
-        objectPicked = false;
-        movingToFood = false;
+        movingToFood = objectPicked = followPlayer = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (objectPicked)
+        {
+            PickUp.transform.position = PickPosition.position;
+        }
+
         if (followPlayer)
         {
             agent.destination = player.transform.position;
@@ -37,17 +42,23 @@ public class Ant_Behavior : MonoBehaviour
             objectPicked = true;
             movingToFood = false;
             FollowPlayer(true);
-        }
-
-        if (objectPicked)
+        }else if (movingToPoint && Vector3.Distance(agent.destination, this.transform.position) <= pickingRange)
         {
-            PickUp.transform.position = PickPosition.position;
+            Puente.GetComponent<PointPuente_Behavior>().DoPuenteWithAnt(this.gameObject);
         }
     }
 
     public void FollowPlayer(bool b)
     {
         followPlayer = b;
+    }
+
+    public void GoToPointPuente(RaycastHit hit)
+    {
+        Puente = hit.transform.gameObject;
+        FollowPlayer(false);
+        agent.destination = hit.transform.position;
+        movingToPoint = true;
     }
 
     public void PickFood(GameObject food)
@@ -70,6 +81,7 @@ public class Ant_Behavior : MonoBehaviour
     public void ThrowFood(RaycastHit hit)
     {
         objectPicked = false;
+        PickUp.transform.position = PickPosition.position;
         Vector3 throwPosition = Vector3.Normalize(hit.point - this.transform.position);
         PickUp.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         PickUp.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);

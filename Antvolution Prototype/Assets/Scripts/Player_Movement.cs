@@ -12,7 +12,7 @@ public class Player_Movement : MonoBehaviour
     Camera playerCam;
     GameObject PickUp;
     bool objectPicked;
-    List<GameObject> ants;
+    public List<GameObject> ants;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +26,12 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (objectPicked)
+        {
+            PickUp.transform.position = PickPosition.position;
+        }
+
+
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 point = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
@@ -89,6 +95,22 @@ public class Player_Movement : MonoBehaviour
                     }
 
                 }
+                else if (hitObject.tag == "Point") //Si clicas en Punto Puente
+                {
+                    //Si tienes alguna hormiga siguiendote y el puente necesita hormigas
+                    if (ants.Count > 0 && hitObject.GetComponent<PointPuente_Behavior>().actualAnts < hitObject.GetComponent<PointPuente_Behavior>().antsNeeded) 
+                    {
+                        //La primera hormiga libre coge la comida
+                        foreach (var ant in ants)
+                        {
+                            if (ant.GetComponent<Ant_Behavior>().movingToPoint == false && ant.GetComponent<Ant_Behavior>().objectPicked == false)
+                            {
+                                ant.GetComponent<Ant_Behavior>().GoToPointPuente(hit);
+                                break;
+                            }
+                        }
+                    }
+                }
                 else // Si no clico ni en comida ni en player
                 {
                     foreach (var ant in ants) //Si alguna hormiga tiene cogida comida la tira
@@ -101,6 +123,7 @@ public class Player_Movement : MonoBehaviour
                     if (objectPicked) // Si yo tengo comida cogida la tiro
                     {
                         objectPicked = false;
+                        PickUp.transform.position = PickPosition.position;
                         Vector3 throwPosition = Vector3.Normalize(hit.point - this.transform.position);
                         PickUp.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
                         PickUp.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
@@ -113,10 +136,7 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
-        if (objectPicked)
-        {
-            PickUp.transform.position = PickPosition.position;
-        }
+
     }
 
     void GoTo(Vector3 _destination)

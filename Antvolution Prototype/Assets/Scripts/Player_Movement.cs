@@ -8,6 +8,7 @@ public class Player_Movement : MonoBehaviour
     public Transform PickPosition;
     public float pickingRange = 2.0f;
     public float groupRange = 4.0f;
+    public GameObject GroupParticles;
     NavMeshAgent agent;
     Camera playerCam;
     GameObject PickUp;
@@ -78,6 +79,7 @@ public class Player_Movement : MonoBehaviour
                 }
                 else if (hitObject.tag == "Player") //Si clico en mí mismo (player)
                 {
+                    Instantiate(GroupParticles, new Vector3(this.transform.position.x, this.transform.position.y - 0.15f, this.transform.position.z), GroupParticles.transform.rotation, this.transform);
                     ants.Clear();
                     //Agrupo las hormigas cercanas y que me sigan
                     foreach (var ant in GameObject.FindGameObjectsWithTag("Ant"))

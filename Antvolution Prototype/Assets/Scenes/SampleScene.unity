@@ -1895,6 +1895,8 @@ MonoBehaviour:
   groupRange: 4
   GroupParticles: {fileID: 2572627173159255478, guid: 3ec4ff3e76eb09948a50181c17d96f7a,
     type: 3}
+  MoveParticles: {fileID: 8699009244971634637, guid: 53ba832320355cc47a4d475631608e72,
+    type: 3}
   ants: []
 --- !u!1 &1722782916
 GameObject:

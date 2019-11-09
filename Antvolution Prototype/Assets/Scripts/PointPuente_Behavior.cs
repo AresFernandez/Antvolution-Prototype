@@ -40,6 +40,7 @@ public class PointPuente_Behavior : MonoBehaviour
                     WaterAnt2.SetActive(true);
                     PuenteObstacle.SetActive(false);
                     actualAnts++;
+                    this.gameObject.SetActive(false);
                 }
                 else
                 {

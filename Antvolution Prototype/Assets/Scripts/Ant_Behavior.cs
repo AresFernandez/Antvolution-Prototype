@@ -42,7 +42,7 @@ public class Ant_Behavior : MonoBehaviour
             objectPicked = true;
             movingToFood = false;
             FollowPlayer(true);
-        }else if (movingToPoint && Vector3.Distance(agent.destination, this.transform.position) <= pickingRange)
+        }else if (movingToPoint && Vector3.Distance(agent.destination, this.transform.position) <= pickingRange/2)
         {
             Puente.GetComponent<PointPuente_Behavior>().DoPuenteWithAnt(this.gameObject);
         }

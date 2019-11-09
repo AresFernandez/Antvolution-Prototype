@@ -9,6 +9,7 @@ public class Player_Movement : MonoBehaviour
     public float pickingRange = 2.0f;
     public float groupRange = 4.0f;
     public GameObject GroupParticles;
+    public GameObject MoveParticles;
     NavMeshAgent agent;
     Camera playerCam;
     GameObject PickUp;
@@ -58,6 +59,7 @@ public class Player_Movement : MonoBehaviour
                 {
                     if (ants.Count>0) //Si tienes alguna hormiga siguiendote
                     {
+                        Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y - 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
                         //La primera hormiga libre coge la comida
                         foreach (var ant in ants)
                         {
@@ -80,19 +82,21 @@ public class Player_Movement : MonoBehaviour
                 else if (hitObject.tag == "Player") //Si clico en mí mismo (player)
                 {
                     Instantiate(GroupParticles, new Vector3(this.transform.position.x, this.transform.position.y - 0.15f, this.transform.position.z), GroupParticles.transform.rotation, this.transform);
-                    ants.Clear();
+                    //ants.Clear();
                     //Agrupo las hormigas cercanas y que me sigan
                     foreach (var ant in GameObject.FindGameObjectsWithTag("Ant"))
                     {
 
                         if (Vector3.Distance(ant.transform.position,transform.position)<=groupRange)
                         {
+                            ant.GetComponent<Ant_Behavior>().movingToFood = false;
+                            ant.GetComponent<Ant_Behavior>().movingToPoint = false;
                             ant.GetComponent<Ant_Behavior>().FollowPlayer(true);
                             ants.Add(ant);
                         }
                         else
                         {
-                            ant.GetComponent<Ant_Behavior>().FollowPlayer(false);
+                            //ant.GetComponent<Ant_Behavior>().FollowPlayer(false);
                         }
                     }
 
@@ -102,6 +106,7 @@ public class Player_Movement : MonoBehaviour
                     //Si tienes alguna hormiga siguiendote y el puente necesita hormigas
                     if (ants.Count > 0 && hitObject.GetComponent<PointPuente_Behavior>().actualAnts < hitObject.GetComponent<PointPuente_Behavior>().antsNeeded) 
                     {
+                        Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y + 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
                         //La primera hormiga libre coge la comida
                         foreach (var ant in ants)
                         {

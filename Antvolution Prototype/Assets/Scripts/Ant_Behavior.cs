@@ -11,14 +11,30 @@ public class Ant_Behavior : MonoBehaviour
     public bool followPlayer;
     NavMeshAgent agent;
     public Transform PickPosition;
-    public float pickingRange = 2.0f;
+    public float pickingRange;
+    public float wanderRange;
+    public float wanderminChangeTime;
+    public float wandermaxChangeTime;
     public bool objectPicked;
     public bool movingToFood;
     public bool movingToPoint;
 
+
+    Vector3 initialPosition;
+    float initWanderTime;
+    float wanderTime;
+
     // Start is called before the first frame update
     void Start()
     {
+        pickingRange = 2.0f;
+        wanderRange = 4f;
+        wanderminChangeTime = 4.5f;
+        wandermaxChangeTime = 7.0f;
+        initialPosition = this.transform.position;
+        initWanderTime = Time.time;
+        wanderTime = 0.5f;
+
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
         movingToFood = objectPicked = followPlayer = false;
@@ -45,6 +61,18 @@ public class Ant_Behavior : MonoBehaviour
         }else if (movingToPoint && Vector3.Distance(agent.destination, this.transform.position) <= pickingRange/2)
         {
             Puente.GetComponent<PointPuente_Behavior>().DoPuenteWithAnt(this.gameObject);
+        }
+        else if(!movingToFood && !movingToPoint)
+        {
+            if (Time.time-initWanderTime >= wanderTime)
+            {
+                agent.destination = new Vector3(Random.Range(initialPosition.x - wanderRange, initialPosition.x + wanderRange),
+                    this.transform.position.y,
+                    Random.Range(initialPosition.z - wanderRange, initialPosition.z + wanderRange));
+                initWanderTime = Time.time;
+                wanderTime = Random.Range(wanderminChangeTime, wandermaxChangeTime);
+            }
+
         }
     }
 

@@ -82,19 +82,21 @@ public class Player_Movement : MonoBehaviour
                 else if (hitObject.tag == "Player") //Si clico en mí mismo (player)
                 {
                     Instantiate(GroupParticles, new Vector3(this.transform.position.x, this.transform.position.y - 0.15f, this.transform.position.z), GroupParticles.transform.rotation, this.transform);
-                    //ants.Clear();
+                    ants.Clear();
                     //Agrupo las hormigas cercanas y que me sigan
                     foreach (var ant in GameObject.FindGameObjectsWithTag("Ant"))
                     {
 
-                        if (Vector3.Distance(ant.transform.position,transform.position)<=groupRange)
+                        if (Vector3.Distance(ant.transform.position,transform.position)<=groupRange 
+                            || ant.GetComponent<Ant_Behavior>().movingToFood 
+                            || ant.GetComponent<Ant_Behavior>().movingToPoint)
                         {
                             ant.GetComponent<Ant_Behavior>().movingToFood = false;
                             ant.GetComponent<Ant_Behavior>().movingToPoint = false;
                             ant.GetComponent<Ant_Behavior>().FollowPlayer(true);
                             ants.Add(ant);
                         }
-                        else
+                        else 
                         {
                             //ant.GetComponent<Ant_Behavior>().FollowPlayer(false);
                         }
@@ -120,6 +122,35 @@ public class Player_Movement : MonoBehaviour
                 }
                 else // Si no clico ni en comida ni en player
                 {
+                    if (hitObject.tag == "Base")
+                    {
+                        if (ants.Count > 0) //Si tienes alguna hormiga siguiendote
+                        {
+                            Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y + 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
+                            //Dejan de seguirme
+                            foreach (var ant in ants)
+                            {
+                                if (ant.GetComponent<Ant_Behavior>().objectPicked == false &&
+                                    ant.GetComponent<Ant_Behavior>().movingToFood == false &&
+                                    ant.GetComponent<Ant_Behavior>().movingToPoint == false)
+                                {
+                                    ant.GetComponent<Ant_Behavior>().FollowPlayer(false);
+                                }
+                            }
+
+                            //Si me siguen las añado de nuevo a mi lista
+                            ants.Clear();
+                            foreach (var ant in GameObject.FindGameObjectsWithTag("Ant"))
+                            {
+                                if (ant.GetComponent<Ant_Behavior>().followPlayer)
+                                {
+                                    ants.Add(ant);
+                                }
+                            }
+
+                        }
+                    }
+
                     foreach (var ant in ants) //Si alguna hormiga tiene cogida comida la tira
                     {
                         if (ant.GetComponent<Ant_Behavior>().objectPicked)
@@ -137,6 +168,9 @@ public class Player_Movement : MonoBehaviour
                         PickUp.GetComponent<Rigidbody>().freezeRotation = false;
                         PickUp.GetComponent<Rigidbody>().AddForce(new Vector3(throwPosition.x, 5, throwPosition.z) * 60);
                     }
+
+
+
                 }
 
 

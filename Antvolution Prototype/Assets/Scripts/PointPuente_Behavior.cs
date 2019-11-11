@@ -29,14 +29,14 @@ public class PointPuente_Behavior : MonoBehaviour
                 {
                     Player.GetComponent<Player_Movement>().ants.Remove(other);
                     Destroy(other.gameObject);
-                    Base.GetComponent<Base_Behavior>().maxAnts--;
+                    //Base.GetComponent<Base_Behavior>().maxAnts--;
                     WaterAnt1.SetActive(true);
                     actualAnts++;
                 }else if (actualAnts == 1)
                 {
                     Player.GetComponent<Player_Movement>().ants.Remove(other);
                     Destroy(other.gameObject);
-                    Base.GetComponent<Base_Behavior>().maxAnts--;
+                    //Base.GetComponent<Base_Behavior>().maxAnts--;
                     WaterAnt2.SetActive(true);
                     PuenteObstacle.SetActive(false);
                     actualAnts++;

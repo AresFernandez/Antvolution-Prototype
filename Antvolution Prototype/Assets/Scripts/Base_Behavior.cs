@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Base_Behavior : MonoBehaviour
 {
     public int maxAnts;
     public float spawnTime = 2.0f;
 
-    public Text antText;
+    //public Text antText;
+    public TextMeshProUGUI antText;
     public GameObject ant;
 
     float startTime;

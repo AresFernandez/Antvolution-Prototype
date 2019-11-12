@@ -18,6 +18,7 @@ public class OrderTutorial : MonoBehaviour
     public Image image4;
     public Image image5;
     private Color c;
+    private Color p;
     private float startTime;
     private bool leftClick;
 
@@ -26,6 +27,7 @@ public class OrderTutorial : MonoBehaviour
     {
         startTime = Time.time;
         leftClick = false;
+
     }
 
     // Update is called once per frame
@@ -41,9 +43,19 @@ public class OrderTutorial : MonoBehaviour
         if (Time.time - startTime >= minimumTime && leftClick)
         {
             c = text.color;
+            p = this.GetComponent<Image>().color;
+            p.a -= fadeInSpeed;
             c.a -= fadeInSpeed;
             text.color = c;
+            text2.color = c;
+            text3.color = c;
+            text4.color = c;
             image.color = c;
+            image2.color = c;
+            image3.color = c;
+            image4.color = c;
+            image5.color = c;
+            this.GetComponent<Image>().color = p;
             if (c.a <= 0)
             {
                 Destroy(this.gameObject);

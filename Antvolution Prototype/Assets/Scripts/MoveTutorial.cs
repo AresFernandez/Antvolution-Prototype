@@ -11,6 +11,7 @@ public class MoveTutorial : MonoBehaviour
     public float fadeInSpeed = 0.01f;
     public float minimumTime = 3.0f;
     public Image image;
+    public GameObject FoodTutorial;
     private Color c;
     private float startTime;
     private bool leftClick;
@@ -38,6 +39,7 @@ public class MoveTutorial : MonoBehaviour
             image.color = c;
             if (c.a <= 0)
             {
+                FoodTutorial.SetActive(true);
                 Destroy(this.gameObject);
             }
         }

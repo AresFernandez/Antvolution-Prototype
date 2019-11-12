@@ -8,6 +8,7 @@ TagManager:
   - Ant
   - Point
   - Base
+  - BigFood
   layers:
   - Default
   - TransparentFX

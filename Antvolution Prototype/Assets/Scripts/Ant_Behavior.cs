@@ -18,6 +18,8 @@ public class Ant_Behavior : MonoBehaviour
     public bool objectPicked;
     public bool movingToFood;
     public bool movingToPoint;
+    public bool movingToBigFood;
+    public bool pickBigFood;
 
 
     Vector3 initialPosition;
@@ -37,7 +39,7 @@ public class Ant_Behavior : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
-        movingToFood = objectPicked = followPlayer = false;
+        pickBigFood = movingToBigFood = movingToFood = objectPicked = followPlayer = false;
     }
 
     // Update is called once per frame
@@ -58,11 +60,39 @@ public class Ant_Behavior : MonoBehaviour
             objectPicked = true;
             movingToFood = false;
             FollowPlayer(true);
-        }else if (movingToPoint && Vector3.Distance(agent.destination, this.transform.position) <= pickingRange/2)
+        }
+        else if (movingToBigFood && Vector3.Distance(PickUp.transform.position, this.transform.position) <= pickingRange)
+        {
+            //PickUp.transform.position = PickPosition.position;
+            //PickUp.GetComponent<Rigidbody>().freezeRotation = true;
+            //objectPicked = true;
+            //movingToFood = false;
+            //FollowPlayer(true);
+            movingToBigFood = false;
+
+
+        }
+        else if (pickBigFood && !movingToBigFood)
+        {
+            int counter = 0;
+            foreach (var ant in player.GetComponent<Player_Movement>().ants)
+            {
+                if (ant.GetComponent<Ant_Behavior>().movingToBigFood == false && ant.GetComponent<Ant_Behavior>().pickBigFood == true)
+                {
+                    counter++;
+                }
+            }
+            if (counter >= PickUp.GetComponent<BigFood_Behavior>().antsNeeded)
+            {
+                player.GetComponent<Player_Movement>().AntsPickedBigFood(PickUp);
+            }
+
+        }
+        else if (movingToPoint && Vector3.Distance(agent.destination, this.transform.position) <= pickingRange/2)
         {
             Puente.GetComponent<PointPuente_Behavior>().DoPuenteWithAnt(this.gameObject);
         }
-        else if(!movingToFood && !movingToPoint)
+        else if(!movingToFood && !movingToPoint && !movingToBigFood && !pickBigFood)
         {
             if (Time.time-initWanderTime >= wanderTime)
             {
@@ -104,6 +134,15 @@ public class Ant_Behavior : MonoBehaviour
             movingToFood = true;
             agent.destination = food.transform.position;
         }
+    }
+
+    public void PickBigFood(GameObject food)
+    {
+        PickUp = food;
+        FollowPlayer(false);
+        movingToBigFood = true;
+        pickBigFood = true;
+        agent.destination = food.transform.position;
     }
 
     public void ThrowFood(RaycastHit hit)

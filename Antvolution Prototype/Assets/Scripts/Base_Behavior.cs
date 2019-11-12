@@ -61,5 +61,11 @@ public class Base_Behavior : MonoBehaviour
             maxAnts++;
             Destroy(other.gameObject);
         }
+        if (other.tag == "BigFood")
+        {
+            startTime = Time.time;
+            Debug.Log("BigFoodPicked");
+            Destroy(other.gameObject);
+        }
     }
 }

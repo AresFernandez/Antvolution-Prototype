@@ -8,10 +8,13 @@ public class Base_Behavior : MonoBehaviour
 {
     public int maxAnts;
     public float spawnTime = 2.0f;
+    public int antsToWin = 5;
 
     //public Text antText;
     public TextMeshProUGUI antText;
     public GameObject ant;
+    public GameObject YouWin;
+    public GameObject BlackFade;
 
     float startTime;
     int antCount;
@@ -40,6 +43,13 @@ public class Base_Behavior : MonoBehaviour
             startTime = Time.time;
             Instantiate(ant, transform.position, transform.rotation);
         }
+
+        if (maxAnts >= antsToWin)
+        {
+            YouWin.SetActive(true);
+            BlackFade.SetActive(true);
+        }
+
     }
 
 

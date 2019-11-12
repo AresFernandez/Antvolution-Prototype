@@ -11,6 +11,8 @@ public class Player_Movement : MonoBehaviour
     public float groupRange = 4.0f;
     public GameObject GroupParticles;
     public GameObject MoveParticles;
+    public GameObject ImTooFar;
+    public GameObject WeNeedMoreAnts;
     NavMeshAgent agent;
     Camera playerCam;
     GameObject PickUp;
@@ -82,7 +84,11 @@ public class Player_Movement : MonoBehaviour
                         //La primera hormiga libre coge la comida
                         foreach (var ant in ants)
                         {
-                            if (ant.GetComponent<Ant_Behavior>().objectPicked == false)
+                            if (ant.GetComponent<Ant_Behavior>().objectPicked == false
+                                && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToPoint == false
+                                && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
                             {
                                 ant.GetComponent<Ant_Behavior>().PickFood(hitObject);
                                 break;
@@ -97,6 +103,10 @@ public class Player_Movement : MonoBehaviour
                         PickUp.GetComponent<Rigidbody>().freezeRotation = true;
                         objectPicked = true;
                     }
+                    else //Si estoy solo y muy lejos de la comida
+                    {
+                        ImTooFar.SetActive(true); //Dialogo estoy muy lejos
+                    }
                 }
                 else if (hitObject.tag == "BigFood") //Si clicas en comida
                 {
@@ -105,7 +115,9 @@ public class Player_Movement : MonoBehaviour
                     {
                         if (ant.GetComponent<Ant_Behavior>().objectPicked
                             || ant.GetComponent<Ant_Behavior>().movingToFood
-                            || ant.GetComponent<Ant_Behavior>().movingToPoint)
+                            || ant.GetComponent<Ant_Behavior>().movingToBigFood
+                            || ant.GetComponent<Ant_Behavior>().movingToPoint
+                            || ant.GetComponent<Ant_Behavior>().pickBigFood)
                         {
                             counter--;
                         }
@@ -120,7 +132,9 @@ public class Player_Movement : MonoBehaviour
                         {
                             if (ant.GetComponent<Ant_Behavior>().objectPicked == false
                                 && ant.GetComponent<Ant_Behavior>().movingToFood == false
-                                && ant.GetComponent<Ant_Behavior>().movingToPoint == false)
+                                && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToPoint == false
+                                && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
                             {
                                 ant.GetComponent<Ant_Behavior>().PickBigFood(hitObject);
                                 counter++;
@@ -132,6 +146,10 @@ public class Player_Movement : MonoBehaviour
                         }
 
                     }
+                    else //Si no hay suficientes hormigas para coger la comida grande
+                    {
+                        WeNeedMoreAnts.SetActive(true); //Dialogo no hay suficientes hormigas
+                    }
                 }
                 else if (hitObject.tag == "Player") //Si clico en mí mismo (player)
                 {
@@ -142,11 +160,15 @@ public class Player_Movement : MonoBehaviour
                     {
 
                         if (Vector3.Distance(ant.transform.position,transform.position)<=groupRange 
-                            || ant.GetComponent<Ant_Behavior>().movingToFood 
-                            || ant.GetComponent<Ant_Behavior>().movingToPoint)
+                            || ant.GetComponent<Ant_Behavior>().movingToFood
+                            || ant.GetComponent<Ant_Behavior>().movingToBigFood
+                            || ant.GetComponent<Ant_Behavior>().movingToPoint
+                            || ant.GetComponent<Ant_Behavior>().pickBigFood)
                         {
                             ant.GetComponent<Ant_Behavior>().movingToFood = false;
+                            ant.GetComponent<Ant_Behavior>().movingToBigFood = false;
                             ant.GetComponent<Ant_Behavior>().movingToPoint = false;
+                            ant.GetComponent<Ant_Behavior>().pickBigFood = false;
                             ant.GetComponent<Ant_Behavior>().FollowPlayer(true);
                             ants.Add(ant);
                         }
@@ -166,7 +188,11 @@ public class Player_Movement : MonoBehaviour
                         //La primera hormiga libre coge la comida
                         foreach (var ant in ants)
                         {
-                            if (ant.GetComponent<Ant_Behavior>().movingToPoint == false && ant.GetComponent<Ant_Behavior>().objectPicked == false)
+                            if (ant.GetComponent<Ant_Behavior>().objectPicked == false
+                                && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToPoint == false
+                                && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
                             {
                                 ant.GetComponent<Ant_Behavior>().GoToPointPuente(hit);
                                 break;
@@ -198,7 +224,9 @@ public class Player_Movement : MonoBehaviour
                                 {
                                     if (ant.GetComponent<Ant_Behavior>().objectPicked == false &&
                                         ant.GetComponent<Ant_Behavior>().movingToFood == false &&
-                                        ant.GetComponent<Ant_Behavior>().movingToPoint == false)
+                                        ant.GetComponent<Ant_Behavior>().movingToBigFood == false &&
+                                        ant.GetComponent<Ant_Behavior>().movingToPoint == false &&
+                                        ant.GetComponent<Ant_Behavior>().pickBigFood == false)
                                     {
                                         ant.GetComponent<Ant_Behavior>().FollowPlayer(false);
                                     }

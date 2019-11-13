@@ -78,35 +78,61 @@ public class Player_Movement : MonoBehaviour
                 GameObject hitObject = hit.transform.gameObject;
                 if (hitObject.tag == "Food") //Si clicas en comida
                 {
-                    if (ants.Count>0) //Si tienes alguna hormiga siguiendote
+                    if (hitObject.GetComponent<FlyingObjective>().flyingObjective == false) //Si está en el suelo
                     {
-                        Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y - 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
-                        //La primera hormiga libre coge la comida
-                        foreach (var ant in ants)
+                        if (ants.Count > 0) //Si tienes alguna hormiga siguiendote
                         {
-                            if (ant.GetComponent<Ant_Behavior>().objectPicked == false
-                                && ant.GetComponent<Ant_Behavior>().movingToFood == false
-                                && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
-                                && ant.GetComponent<Ant_Behavior>().movingToPoint == false
-                                && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
+                            Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y - 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
+                            //La primera hormiga libre coge la comida
+                            foreach (var ant in ants)
                             {
-                                ant.GetComponent<Ant_Behavior>().PickFood(hitObject);
-                                break;
+                                if (ant.GetComponent<Ant_Behavior>().objectPicked == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToPoint == false
+                                    && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
+                                {
+                                    ant.GetComponent<Ant_Behavior>().PickFood(hitObject);
+                                    break;
+                                }
                             }
-                        }                   
+                        }
+                        else if (Vector3.Distance(hitObject.transform.position, this.transform.position) <= pickingRange) //Si no te sigue nadie
+                        {
+                            //Yo cojo la comida
+                            hitObject.transform.position = PickPosition.position;
+                            PickUp = hitObject;
+                            PickUp.GetComponent<Rigidbody>().freezeRotation = true;
+                            objectPicked = true;
+                        }
+                        else //Si estoy solo y muy lejos de la comida
+                        {
+                            ImTooFar.SetActive(true); //Dialogo estoy muy lejos
+                        }
                     }
-                    else if (Vector3.Distance(hitObject.transform.position,this.transform.position)<=pickingRange) //Si no te sigue nadie
+                    else //Si está en altura
                     {
-                        //Yo cojo la comida
-                        hitObject.transform.position = PickPosition.position;
-                        PickUp = hitObject;
-                        PickUp.GetComponent<Rigidbody>().freezeRotation = true;
-                        objectPicked = true;
+                        if (ants.Count > 0) //Si tienes alguna hormiga siguiendote
+                        {
+                            
+                            //La primera hormiga libre coge la comida
+                            foreach (var ant in ants)
+                            {
+                                if (ant.GetComponent<Ant_Behavior>().objectPicked == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToPoint == false
+                                    && ant.GetComponent<Ant_Behavior>().pickBigFood == false
+                                    && ant.GetComponent<Ant_Behavior>().flyingAnt == true)
+                                {
+                                    ant.GetComponent<Ant_Behavior>().PickFood(hitObject);
+                                    Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y - 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    else //Si estoy solo y muy lejos de la comida
-                    {
-                        ImTooFar.SetActive(true); //Dialogo estoy muy lejos
-                    }
+                    
                 }
                 else if (hitObject.tag == "BigFood") //Si clicas en comida
                 {

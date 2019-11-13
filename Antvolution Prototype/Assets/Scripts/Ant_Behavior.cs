@@ -20,6 +20,7 @@ public class Ant_Behavior : MonoBehaviour
     public bool movingToPoint;
     public bool movingToBigFood;
     public bool pickBigFood;
+    public bool flyingAnt;
 
 
     Vector3 initialPosition;

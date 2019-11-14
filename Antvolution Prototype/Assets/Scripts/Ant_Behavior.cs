@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class Ant_Behavior : MonoBehaviour
 {
     private GameObject player;
+    private GameObject antBase;
     private GameObject PickUp;
     private GameObject Puente;
     public bool followPlayer;
@@ -17,6 +18,7 @@ public class Ant_Behavior : MonoBehaviour
     public float wandermaxChangeTime;
     public bool objectPicked;
     public bool movingToFood;
+    public bool movingToBase;
     public bool movingToPoint;
     public bool movingToBigFood;
     public bool pickBigFood;
@@ -40,6 +42,7 @@ public class Ant_Behavior : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
+        antBase = GameObject.FindGameObjectWithTag("Base");
         pickBigFood = movingToBigFood = movingToFood = objectPicked = followPlayer = false;
     }
 
@@ -60,7 +63,13 @@ public class Ant_Behavior : MonoBehaviour
             PickUp.GetComponent<Rigidbody>().freezeRotation = true;
             objectPicked = true;
             movingToFood = false;
-            FollowPlayer(true);
+            movingToBase = true;
+            agent.destination = antBase.transform.position;
+        }
+        else if (movingToBase && Vector3.Distance(antBase.transform.position, this.transform.position) <= pickingRange)
+        {
+            ThrowFood(antBase.transform.position);
+            movingToBase = false;
         }
         else if (movingToBigFood && Vector3.Distance(PickUp.transform.position, this.transform.position) <= pickingRange)
         {
@@ -93,7 +102,7 @@ public class Ant_Behavior : MonoBehaviour
         {
             Puente.GetComponent<PointPuente_Behavior>().DoPuenteWithAnt(this.gameObject);
         }
-        else if(!movingToFood && !movingToPoint && !movingToBigFood && !pickBigFood)
+        else if(!movingToFood && !movingToPoint && !movingToBigFood && !pickBigFood && !movingToBase)
         {
             if (Time.time-initWanderTime >= wanderTime)
             {
@@ -151,6 +160,17 @@ public class Ant_Behavior : MonoBehaviour
         objectPicked = false;
         PickUp.transform.position = PickPosition.position;
         Vector3 throwPosition = Vector3.Normalize(hit.point - this.transform.position);
+        PickUp.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        PickUp.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
+        PickUp.GetComponent<Rigidbody>().freezeRotation = false;
+        PickUp.GetComponent<Rigidbody>().AddForce(new Vector3(throwPosition.x, 5, throwPosition.z) * 60);
+    }
+
+    public void ThrowFood(Vector3 target)
+    {
+        objectPicked = false;
+        PickUp.transform.position = PickPosition.position;
+        Vector3 throwPosition = Vector3.Normalize(target - this.transform.position);
         PickUp.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         PickUp.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
         PickUp.GetComponent<Rigidbody>().freezeRotation = false;

@@ -89,6 +89,7 @@ public class Player_Movement : MonoBehaviour
                             {
                                 if (ant.GetComponent<Ant_Behavior>().objectPicked == false
                                     && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToBase == false
                                     && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
                                     && ant.GetComponent<Ant_Behavior>().movingToPoint == false
                                     && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
@@ -122,6 +123,7 @@ public class Player_Movement : MonoBehaviour
                             {
                                 if (ant.GetComponent<Ant_Behavior>().objectPicked == false
                                     && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                    && ant.GetComponent<Ant_Behavior>().movingToBase == false
                                     && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
                                     && ant.GetComponent<Ant_Behavior>().movingToPoint == false
                                     && ant.GetComponent<Ant_Behavior>().pickBigFood == false
@@ -149,6 +151,7 @@ public class Player_Movement : MonoBehaviour
                     {
                         if (ant.GetComponent<Ant_Behavior>().objectPicked
                             || ant.GetComponent<Ant_Behavior>().movingToFood
+                            || ant.GetComponent<Ant_Behavior>().movingToBase
                             || ant.GetComponent<Ant_Behavior>().movingToBigFood
                             || ant.GetComponent<Ant_Behavior>().movingToPoint
                             || ant.GetComponent<Ant_Behavior>().pickBigFood)
@@ -166,6 +169,7 @@ public class Player_Movement : MonoBehaviour
                         {
                             if (ant.GetComponent<Ant_Behavior>().objectPicked == false
                                 && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToBase == false
                                 && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
                                 && ant.GetComponent<Ant_Behavior>().movingToPoint == false
                                 && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
@@ -195,11 +199,13 @@ public class Player_Movement : MonoBehaviour
 
                         if (Vector3.Distance(ant.transform.position,transform.position)<=groupRange 
                             || ant.GetComponent<Ant_Behavior>().movingToFood
+                            || ant.GetComponent<Ant_Behavior>().movingToBase
                             || ant.GetComponent<Ant_Behavior>().movingToBigFood
                             || ant.GetComponent<Ant_Behavior>().movingToPoint
                             || ant.GetComponent<Ant_Behavior>().pickBigFood)
                         {
                             ant.GetComponent<Ant_Behavior>().movingToFood = false;
+                            ant.GetComponent<Ant_Behavior>().movingToBase = false;
                             ant.GetComponent<Ant_Behavior>().movingToBigFood = false;
                             ant.GetComponent<Ant_Behavior>().movingToPoint = false;
                             ant.GetComponent<Ant_Behavior>().pickBigFood = false;
@@ -224,6 +230,7 @@ public class Player_Movement : MonoBehaviour
                         {
                             if (ant.GetComponent<Ant_Behavior>().objectPicked == false
                                 && ant.GetComponent<Ant_Behavior>().movingToFood == false
+                                && ant.GetComponent<Ant_Behavior>().movingToBase == false
                                 && ant.GetComponent<Ant_Behavior>().movingToBigFood == false
                                 && ant.GetComponent<Ant_Behavior>().movingToPoint == false
                                 && ant.GetComponent<Ant_Behavior>().pickBigFood == false)
@@ -258,6 +265,7 @@ public class Player_Movement : MonoBehaviour
                                 {
                                     if (ant.GetComponent<Ant_Behavior>().objectPicked == false &&
                                         ant.GetComponent<Ant_Behavior>().movingToFood == false &&
+                                        ant.GetComponent<Ant_Behavior>().movingToBase == false &&
                                         ant.GetComponent<Ant_Behavior>().movingToBigFood == false &&
                                         ant.GetComponent<Ant_Behavior>().movingToPoint == false &&
                                         ant.GetComponent<Ant_Behavior>().pickBigFood == false)

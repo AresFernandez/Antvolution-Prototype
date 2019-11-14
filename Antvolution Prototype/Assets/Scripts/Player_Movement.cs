@@ -14,6 +14,7 @@ public class Player_Movement : MonoBehaviour
     public GameObject ImTooFar;
     public GameObject WeNeedMoreAnts;
     public GameObject WeCantReachThat;
+    public GameObject antBase;
     NavMeshAgent agent;
     Camera playerCam;
     GameObject PickUp;
@@ -53,6 +54,12 @@ public class Player_Movement : MonoBehaviour
             AveragePickPosition /= bigFoodAnts.Count;
             BigFood.transform.position = AveragePickPosition;
             BigFood.GetComponent<Rigidbody>().freezeRotation = true;
+
+
+            if (Vector3.Distance(antBase.transform.position, AveragePickPosition) <= pickingRange)
+            {
+                ThrowBigFood(antBase.transform.position);
+            }
         }
 
 
@@ -331,10 +338,30 @@ public class Player_Movement : MonoBehaviour
             if (ant.GetComponent<Ant_Behavior>().pickBigFood == true)
             {
                 bigFoodAnts.Add(ant);
-                ant.GetComponent<Ant_Behavior>().FollowPlayer(true);
-                ant.GetComponent<Ant_Behavior>().pickBigFood = false;
+                ant.GetComponent<Ant_Behavior>().movingToBase = true;
+                ant.GetComponent<Ant_Behavior>().GoTo(antBase.transform.position);
             }
         }
+    }
+
+    public void ThrowBigFood(Vector3 target)
+    {
+        if (antsPickedBigFood)
+        {
+            antsPickedBigFood = false;
+            BigFood.transform.position = AveragePickPosition;
+            Vector3 throwPosition = Vector3.Normalize(target - AveragePickPosition);
+            BigFood.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            BigFood.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
+            BigFood.GetComponent<Rigidbody>().freezeRotation = false;
+            BigFood.GetComponent<Rigidbody>().AddForce(new Vector3(throwPosition.x, 5, throwPosition.z) * 60);
+        }
+        foreach (var ant in bigFoodAnts)
+        {
+            ant.GetComponent<Ant_Behavior>().movingToBase = false;
+            ant.GetComponent<Ant_Behavior>().pickBigFood = false;
+        }
+
     }
 
 }

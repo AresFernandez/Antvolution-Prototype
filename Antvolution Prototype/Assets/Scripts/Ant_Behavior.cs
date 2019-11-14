@@ -68,7 +68,16 @@ public class Ant_Behavior : MonoBehaviour
         }
         else if (movingToBase && Vector3.Distance(antBase.transform.position, this.transform.position) <= pickingRange)
         {
-            ThrowFood(antBase.transform.position);
+
+            if (pickBigFood)
+            {
+                //player.GetComponent<Player_Movement>().ThrowBigFood(antBase.transform.position);
+            }
+            else
+            {
+                ThrowFood(antBase.transform.position);
+            }
+
             movingToBase = false;
         }
         else if (movingToBigFood && Vector3.Distance(PickUp.transform.position, this.transform.position) <= pickingRange)
@@ -175,5 +184,10 @@ public class Ant_Behavior : MonoBehaviour
         PickUp.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
         PickUp.GetComponent<Rigidbody>().freezeRotation = false;
         PickUp.GetComponent<Rigidbody>().AddForce(new Vector3(throwPosition.x, 5, throwPosition.z) * 60);
+    }
+
+    public void GoTo(Vector3 _destination)
+    {
+        agent.destination = _destination;
     }
 }

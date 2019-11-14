@@ -4880,6 +4880,7 @@ MonoBehaviour:
   ImTooFar: {fileID: 669750733}
   WeNeedMoreAnts: {fileID: 1849292950}
   WeCantReachThat: {fileID: 715231658}
+  antBase: {fileID: 637073339}
   ants: []
   bigFoodAnts: []
   antsPickedBigFood: 0

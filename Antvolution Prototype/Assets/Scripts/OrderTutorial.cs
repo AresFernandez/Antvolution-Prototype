@@ -33,14 +33,9 @@ public class OrderTutorial : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-        {
-            leftClick = true;
-        }
-
 
         //TO DO
-        if (Time.time - startTime >= minimumTime && leftClick)
+        if (leftClick)
         {
             c = text.color;
             p = this.GetComponent<Image>().color;
@@ -61,5 +56,10 @@ public class OrderTutorial : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+    }
+
+    public void LeftClick()
+    {
+        leftClick = true;
     }
 }

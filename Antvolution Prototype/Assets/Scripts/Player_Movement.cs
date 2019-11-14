@@ -13,6 +13,7 @@ public class Player_Movement : MonoBehaviour
     public GameObject MoveParticles;
     public GameObject ImTooFar;
     public GameObject WeNeedMoreAnts;
+    public GameObject WeCantReachThat;
     NavMeshAgent agent;
     Camera playerCam;
     GameObject PickUp;
@@ -112,6 +113,7 @@ public class Player_Movement : MonoBehaviour
                     }
                     else //Si está en altura
                     {
+                        bool weHaveFlyingAnt = false;
                         if (ants.Count > 0) //Si tienes alguna hormiga siguiendote
                         {
                             
@@ -127,9 +129,15 @@ public class Player_Movement : MonoBehaviour
                                 {
                                     ant.GetComponent<Ant_Behavior>().PickFood(hitObject);
                                     Instantiate(MoveParticles, new Vector3(hitObject.transform.position.x, hitObject.transform.position.y - 0.25f, hitObject.transform.position.z), GroupParticles.transform.rotation, hitObject.transform);
+                                    weHaveFlyingAnt = true;
                                     break;
                                 }
                             }
+                        }
+
+                        if (!weHaveFlyingAnt)
+                        {
+                            WeCantReachThat.SetActive(true);
                         }
                     }
                     

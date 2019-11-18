@@ -9,6 +9,7 @@ TagManager:
   - Point
   - Base
   - BigFood
+  - Fog
   layers:
   - Default
   - TransparentFX

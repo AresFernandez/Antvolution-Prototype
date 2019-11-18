@@ -22,21 +22,39 @@ public class Player_Movement : MonoBehaviour
     bool objectPicked;
     public List<GameObject> ants;
     public List<GameObject> bigFoodAnts;
+    public List<GameObject> fogs;
     public bool antsPickedBigFood;
+    private bool isFog;
 
     // Start is called before the first frame update
     void Start()
     {
         ants = new List<GameObject>();
         bigFoodAnts = new List<GameObject>();
+        fogs = new List<GameObject>();
+        foreach (var fog in GameObject.FindGameObjectsWithTag("Fog"))
+        {
+            fogs.Add(fog);
+        }
         agent = GetComponent<NavMeshAgent>();
         playerCam = GameObject.Find("Main Camera").GetComponent<Camera>();
         antsPickedBigFood = objectPicked = false;
+        isFog = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Activar / Desactivar niebla
+        if (Input.GetButtonDown("Jump"))
+        {
+            isFog = !isFog;
+            foreach (var fog in fogs)
+            {
+                fog.SetActive(isFog);
+            }
+        }
+
         if (objectPicked)
         {
             PickUp.transform.position = PickPosition.position;

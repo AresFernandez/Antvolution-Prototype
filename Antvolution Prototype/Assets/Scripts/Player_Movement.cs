@@ -11,6 +11,7 @@ public class Player_Movement : MonoBehaviour
     public float groupRange = 4.0f;
     public GameObject GroupParticles;
     public GameObject MoveParticles;
+    public GameObject RealMoveParticles;
     public GameObject ImTooFar;
     public GameObject WeNeedMoreAnts;
     public GameObject WeCantReachThat;
@@ -89,7 +90,7 @@ public class Player_Movement : MonoBehaviour
             {
                 GameObject hitObject = hit.transform.gameObject;
 
-
+                Instantiate(RealMoveParticles, new Vector3(hit.point.x, hit.point.y + 0.25f, hit.point.z), RealMoveParticles.transform.rotation, hitObject.transform);
                 GoTo(hit.point);
 
             }
